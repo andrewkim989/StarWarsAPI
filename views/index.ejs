@@ -1,0 +1,126 @@
+<html>
+<head>
+    <title>Star Wars API</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        function results(text, id, url) {
+            $("#data").empty();
+            $("#data").append("Loading...");
+            $("#pages").empty();
+
+            $.get(`/${text}/${id}`, function(data){
+                $("#data").empty();
+                for (var i = 0; i < data.results.length; i++) {
+                    $("#data").append(`<li>${data.results[i].name}</li>`);
+                }
+
+                if (data.previous) {
+                    $("#pages").append(`<a href = "#" onclick = "results('${text}',
+                    ${data.previous.slice(-1)}, '${url}');">Previous 10</a>`);
+                }
+                
+                $("#pages").append(`<a href = "#" onclick = "allData('${url}', '${text}')"
+                >Show all ${data.count} ${text}</a>`);
+
+                if (data.next) {
+                    $("#pages").append(`<a href = "#" onclick = "results('${text}', 
+                    ${data.next.slice(-1)}, '${url}');">Next 10</a>`);
+                }
+
+                return false;
+            }, "json");
+        }
+
+        function allData(url, text) {
+            $("#data").empty();
+            $("#data").append("Loading a lot of data. <br/> This will take a while...");
+            $("#pages").empty();
+
+            $.get(url, function(data){
+                $("#data").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#data").append(`<li>${data[i].name}</li>`);
+                }
+
+                $("#pages").append(`<a href = "#" onclick = "results('${text}', 1, '${url}')"
+                >Show only the first 10 ${text}</a>`);
+
+                return false;
+            }, "json");
+        }
+
+        $(document).ready(function(){
+            $("#peopleBtn").click(function(){
+                results("people", 1, "/allpeople");
+            });
+
+            $("#planetBtn").click(function(){
+                results("planets", 1, "/allplanets")
+            });
+            
+            $("#speciesBtn").click(function(){
+                results("species", 1, "/allspecies");
+            });
+
+            $("#vehiclesBtn").click(function(){
+                results("vehicles", 1, "/allvehicles");
+            });
+
+            $("#starshipsBtn").click(function(){
+                results("starships", 1, "/allstarships");
+            });
+        });
+    </script>
+    <style>
+        #wrapper {
+            text-align: center;
+        }
+        h1 {
+            background-color: rgb(119, 119, 240);
+            padding: 20px;
+        }
+        #data {
+            width: 300px;
+            margin: auto;
+            margin-top: 25px;
+            padding: 10px;
+            border: 2px solid;
+        }
+        #pages {
+            text-align: center;
+            margin: 5px;
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 10px;
+        }
+        a {
+            margin-left: 10px;
+        }
+        li {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <div id = "wrapper">
+        <div id = "top">
+            <h1>Star Wars API</h1>
+        </div>
+        <div id = "main">
+            <button id = "peopleBtn">People</button>
+            <button id = "planetBtn">Planets</button>
+            <button id = "speciesBtn">Species</button>
+            <button id = "vehiclesBtn">Vehicles</button>
+            <button id = "starshipsBtn">Starships</button>
+        </div>
+        <div id = "data">
+            <h3>Click on the buttons above to reveal the list of a certain category.</h3>
+        </div>
+        <div id = "pages"></div>
+    </div>
+</body>
+</html>
