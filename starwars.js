@@ -19,6 +19,10 @@ app.get("/planets/:id", function(req, res) {
     getOne("http://swapi.co/api/planets/?page=", req.params.id, res);
 });
 
+app.get("/films/:id", function(req, res) {
+    getOne("http://swapi.co/api/films/?page=", req.params.id, res);
+});
+
 app.get("/species/:id", function(req, res) {
     getOne("http://swapi.co/api/species/?page=", req.params.id, res);
 });
