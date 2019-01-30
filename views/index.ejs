@@ -14,7 +14,12 @@
             $.get(`/${text}/${id}`, function(data){
                 $("#data").empty();
                 for (var i = 0; i < data.results.length; i++) {
-                    $("#data").append(`<li>${data.results[i].name}</li>`);
+                    if (text === "films") {
+                        $("#data").append(`<li>${data.results[i].title}</li>`);
+                    }
+                    else {
+                        $("#data").append(`<li>${data.results[i].name}</li>`);
+                    }
                 }
 
                 if (data.previous) {
@@ -22,8 +27,10 @@
                     ${data.previous.slice(-1)}, '${url}');">Previous 10</a>`);
                 }
                 
-                $("#pages").append(`<a href = "#" onclick = "allData('${url}', '${text}')"
-                >Show all ${data.count} ${text}</a>`);
+                if (data.count > 10) {
+                    $("#pages").append(`<a href = "#" onclick = "allData('${url}', '${text}')"
+                    >Show all ${data.count} ${text}</a>`);
+                }
 
                 if (data.next) {
                     $("#pages").append(`<a href = "#" onclick = "results('${text}', 
@@ -58,7 +65,11 @@
             });
 
             $("#planetBtn").click(function(){
-                results("planets", 1, "/allplanets")
+                results("planets", 1, "/allplanets");
+            });
+            
+            $("#filmsBtn").click(function(){
+                results("films", 1);
             });
             
             $("#speciesBtn").click(function(){
@@ -113,6 +124,7 @@
         <div id = "main">
             <button id = "peopleBtn">People</button>
             <button id = "planetBtn">Planets</button>
+            <button id = "filmsBtn">Films</button>
             <button id = "speciesBtn">Species</button>
             <button id = "vehiclesBtn">Vehicles</button>
             <button id = "starshipsBtn">Starships</button>
